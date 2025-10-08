@@ -3,179 +3,212 @@
 @tailwind utilities;
 
 @layer base {
-    html {
-        scroll-behavior: smooth;
-    }
+  html {
+    scroll-behavior: smooth;
+  }
 
-    body {
-        @apply bg-cream text-midnight font-body;
-    }
+  body {
+    @apply bg-bg-base text-fg-primary font-domaine;
+  }
 }
 
 @layer components {
-    /* Editorial Typography Hierarchy */
-    .editorial-hero {
-        @apply font-heading text-7xl md:text-8xl lg:text-9xl font-light leading-none tracking-tight;
-    }
+  /* Figma-based Typography System */
+  .hero-name {
+    @apply font-editorial text-hero-large font-thin italic leading-none text-fg-inverted;
+  }
 
-    .editorial-headline {
-        @apply font-heading text-5xl md:text-6xl lg:text-7xl font-light leading-tight tracking-tight;
-    }
+  .hero-ampersand {
+    @apply font-editorial text-hero-medium font-thin italic leading-none text-fg-inverted;
+  }
 
-    .editorial-subhead {
-        @apply font-heading text-3xl md:text-4xl font-light leading-tight;
-    }
+  .hero-date {
+    @apply font-domaine text-section-date font-normal leading-tight text-fg-inverted;
+  }
 
-    .editorial-body {
-        @apply font-body text-lg leading-relaxed;
-    }
+  .section-heading {
+    @apply font-editorial text-section-heading font-normal italic leading-tight text-fg-accent;
+  }
 
-    .editorial-caption {
-        @apply font-body text-base text-midnight/70;
-    }
+  .section-subtitle {
+    @apply font-domaine text-heading-subtitle font-normal leading-tight text-fg-secondary;
+  }
 
-    .editorial-quote {
-        @apply font-heading text-2xl md:text-3xl font-light italic leading-relaxed;
-    }
+  .event-time {
+    @apply font-editorial text-event-time font-normal italic leading-tight text-fg-accent;
+  }
 
-    /* Sophisticated Layout Components */
-    .section-padding {
-        @apply py-24 md:py-32 lg:py-40;
-    }
+  .event-title {
+    @apply font-domaine text-event-title font-normal leading-tight text-fg-accent;
+  }
 
-    .container-editorial {
-        @apply max-w-7xl mx-auto px-6 lg:px-12;
-    }
+  .event-location {
+    @apply font-grotesk text-overline font-normal uppercase tracking-widest text-fg-secondary;
+  }
 
-    /* Editorial Spacing & Rhythm */
-    .editorial-spacing > * + * {
-        @apply mt-6;
-    }
+  .event-description {
+    @apply font-domaine text-body-medium font-normal leading-tight text-fg-primary;
+  }
 
-    .editorial-spacing-lg > * + * {
-        @apply mt-8;
-    }
+  .nav-link {
+    @apply font-domaine text-button font-medium tracking-wide text-fg-inverted;
+  }
 
-    /* Sophisticated Interactions */
-    .btn-primary {
-        @apply bg-wine text-cream px-8 py-4 text-sm uppercase tracking-widest font-medium;
-        @apply hover:bg-wine-hover transition-all duration-300 transform hover:scale-105;
-        @apply focus:outline-none focus:ring-4 focus:ring-wine/20;
-    }
+  .cta-heading {
+    @apply font-rhymes text-heading-h3 font-normal leading-tight text-fg-inverted;
+  }
 
-    .btn-secondary {
-        @apply border-2 border-wine text-wine px-8 py-4 text-sm uppercase tracking-widest font-medium;
-        @apply hover:bg-wine hover:text-cream transition-all duration-300;
-        @apply focus:outline-none focus:ring-4 focus:ring-wine/20;
-    }
+  /* Sophisticated Layout Components */
+  .section-padding {
+    @apply py-24 md:py-32 lg:py-40;
+  }
 
-    /* Editorial Elements */
-    .editorial-divider {
-        @apply w-24 h-px bg-wine mx-auto;
-    }
+  .container-editorial {
+    @apply max-w-7xl mx-auto px-6 lg:px-12;
+  }
 
-    .editorial-card {
-        @apply bg-white/70 backdrop-blur-sm p-8 rounded-lg border border-white/20;
-        @apply hover:bg-white/80 transition-all duration-300;
-    }
+  /* Editorial Spacing & Rhythm */
+  .editorial-spacing > * + * {
+    @apply mt-6;
+  }
 
-    /* Navigation Pills */
-    .nav-pill {
-        @apply px-6 py-3 rounded-full text-sm tracking-wider font-medium transition-all duration-300;
-        @apply hover:bg-white/80 backdrop-blur-sm;
-    }
+  .editorial-spacing-lg > * + * {
+    @apply mt-8;
+  }
 
-    .nav-pill.active {
-        @apply bg-white/90 text-wine shadow-sm;
-    }
+  /* Figma Button Styles */
+  .btn-primary {
+    @apply bg-fg-inverted text-fg-accent px-8 py-6 font-domaine text-button font-medium tracking-wide rounded-lg;
+    @apply hover:bg-opacity-90 transition-all duration-300 transform hover:scale-105;
+    @apply focus:outline-none focus:ring-4 focus:ring-fg-accent/20;
+  }
 
-    /* Form Elements */
-    .form-input {
-        @apply w-full px-4 py-3 border border-wine/20 rounded-md focus:ring-2 focus:ring-wine focus:border-transparent bg-white/80;
-        @apply font-body text-midnight placeholder-midnight/50;
-    }
+  .btn-secondary {
+    @apply bg-fg-secondary text-fg-inverted px-12 py-9 font-domaine text-cta-large font-medium tracking-wide rounded-lg;
+    @apply hover:bg-opacity-90 transition-all duration-300 transform hover:scale-105;
+    @apply focus:outline-none focus:ring-4 focus:ring-fg-secondary/20;
+  }
 
-    .form-input-dark {
-        @apply w-full px-4 py-3 bg-white/10 border border-white/30 rounded text-cream placeholder-cream/60;
-        @apply focus:outline-none focus:ring-2 focus:ring-cream/50 backdrop-blur-sm;
-    }
+  .btn-accent {
+    @apply bg-fg-accent text-fg-inverted px-8 py-6 font-domaine text-cta-medium font-medium tracking-wide rounded-lg;
+    @apply hover:bg-opacity-90 transition-all duration-300 transform hover:scale-105;
+    @apply focus:outline-none focus:ring-4 focus:ring-fg-accent/20;
+  }
+
+  .btn-maps {
+    @apply bg-fg-inverted text-fg-primary px-8 py-6 font-domaine text-cta-medium font-medium tracking-wide rounded-lg;
+    @apply hover:bg-opacity-90 transition-all duration-300 transform hover:scale-105;
+    @apply focus:outline-none focus:ring-4 focus:ring-fg-primary/20;
+    @apply flex items-center gap-2;
+  }
+
+  /* Editorial Elements */
+  .editorial-divider {
+    @apply w-24 h-px bg-fg-accent mx-auto;
+  }
+
+  .editorial-card {
+    @apply bg-white/70 backdrop-blur-sm p-8 rounded-lg border border-white/20;
+    @apply hover:bg-white/80 transition-all duration-300;
+  }
+
+  /* Navigation Pills */
+  .nav-pill {
+    @apply px-6 py-3 rounded-full text-sm tracking-wider font-medium transition-all duration-300;
+    @apply hover:bg-white/80 backdrop-blur-sm;
+  }
+
+  .nav-pill.active {
+    @apply bg-white/90 text-wine shadow-sm;
+  }
+
+  /* Form Elements */
+  .form-input {
+    @apply w-full px-4 py-3 border border-wine/20 rounded-md focus:ring-2 focus:ring-wine focus:border-transparent bg-white/80;
+    @apply font-body text-midnight placeholder-midnight/50;
+  }
+
+  .form-input-dark {
+    @apply w-full px-4 py-3 bg-white/10 border border-white/30 rounded text-cream placeholder-cream/60;
+    @apply focus:outline-none focus:ring-2 focus:ring-cream/50 backdrop-blur-sm;
+  }
 }
 
 @layer utilities {
-    /* Advanced Animation Utilities */
-    .animate-fade-in-up {
-        animation: fadeInUp 0.8s ease-out forwards;
-    }
+  /* Advanced Animation Utilities */
+  .animate-fade-in-up {
+    animation: fadeInUp 0.8s ease-out forwards;
+  }
 
-    .animate-fade-in-up-delay {
-        animation: fadeInUp 0.8s ease-out 0.2s forwards;
-        opacity: 0;
-    }
+  .animate-fade-in-up-delay {
+    animation: fadeInUp 0.8s ease-out 0.2s forwards;
+    opacity: 0;
+  }
 
-    /* Typography Utilities */
-    .text-balance {
-        text-wrap: balance;
-    }
+  /* Typography Utilities */
+  .text-balance {
+    text-wrap: balance;
+  }
 
-    .tracking-widest {
-        letter-spacing: 0.2em;
-    }
+  .tracking-widest {
+    letter-spacing: 0.2em;
+  }
 
-    /* Sophisticated Gradients */
-    .gradient-editorial {
-        background: linear-gradient(
-            135deg,
-            theme("colors.cream") 0%,
-            theme("colors.white") 50%,
-            theme("colors.sage.DEFAULT/10") 100%
-        );
-    }
+  /* Sophisticated Gradients */
+  .gradient-editorial {
+    background: linear-gradient(
+      135deg,
+      theme("colors.cream") 0%,
+      theme("colors.white") 50%,
+      theme("colors.sage") 100%
+    );
+  }
 
-    .gradient-hero {
-        background: linear-gradient(
-            180deg,
-            theme("colors.cream") 0%,
-            theme("colors.cream/90") 50%,
-            theme("colors.white") 100%
-        );
-    }
+  .gradient-hero {
+    background: linear-gradient(
+      180deg,
+      theme("colors.cream") 0%,
+      theme("colors.cream/90") 50%,
+      theme("colors.white") 100%
+    );
+  }
 
-    .gradient-dark {
-        background: linear-gradient(
-            135deg,
-            theme("colors.midnight") 0%,
-            theme("colors.midnight/95") 50%,
-            theme("colors.wine/20") 100%
-        );
-    }
+  .gradient-dark {
+    background: linear-gradient(
+      135deg,
+      theme("colors.fg-feature") 0%,
+      theme("colors.fg-feature") 50%,
+      theme("colors.fg-secondary") 100%
+    );
+  }
 }
 
 /* Keyframe Animations */
 @keyframes fadeInUp {
-    from {
-        opacity: 0;
-        transform: translateY(30px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* Smooth Scroll Enhancement */
 @media (prefers-reduced-motion: no-preference) {
-    html {
-        scroll-behavior: smooth;
-    }
+  html {
+    scroll-behavior: smooth;
+  }
 }
 
 /* Print Styles for Editorial Feel */
 @media print {
-    body {
-        @apply font-body text-black bg-white;
-    }
+  body {
+    @apply font-body text-black bg-white;
+  }
 
-    .editorial-headline {
-        @apply text-black;
-    }
+  .editorial-headline {
+    @apply text-black;
+  }
 }

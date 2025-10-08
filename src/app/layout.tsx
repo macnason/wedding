@@ -1,28 +1,71 @@
 import type { Metadata } from "next";
-import { Playfair_Display, Crimson_Text } from "next/font/google";
+import localFont from "next/font/local";
 import "../styles/globals.css";
 
-const playfair = Playfair_Display({
-  subsets: ["latin"],
-  variable: "--font-playfair",
+// PP Editorial New font
+const ppEditorial = localFont({
+  src: [
+    {
+      path: "../../public/fonts/PPEditorialNew/PPEditorialNew-Regular.woff2",
+      weight: "400",
+      style: "normal",
+    },
+    {
+      path: "../../public/fonts/PPEditorialNew/PPEditorialNew-Regular.woff",
+      weight: "400",
+      style: "normal",
+    },
+    {
+      path: "../../public/fonts/PPEditorialNew/PPEditorialNew-UltralightItalic.woff2",
+      weight: "100",
+      style: "italic",
+    },
+    {
+      path: "../../public/fonts/PPEditorialNew/PPEditorialNew-UltralightItalic.woff",
+      weight: "100",
+      style: "italic",
+    },
+  ],
+  variable: "--font-pp-editorial",
   display: "swap",
 });
 
-const crimson = Crimson_Text({
-  subsets: ["latin"],
-  weight: ["400", "600"],
-  variable: "--font-crimson",
+// Domaine Text font
+const domaineText = localFont({
+  src: [
+    {
+      path: "../../public/fonts/DomaineText/DomaineText-Regular.woff2",
+      weight: "400",
+      style: "normal",
+    },
+    {
+      path: "../../public/fonts/DomaineText/DomaineText-Regular.woff",
+      weight: "400",
+      style: "normal",
+    },
+    {
+      path: "../../public/fonts/DomaineText/DomaineText-Medium.woff2",
+      weight: "500",
+      style: "normal",
+    },
+    {
+      path: "../../public/fonts/DomaineText/DomaineText-Medium.woff",
+      weight: "500",
+      style: "normal",
+    },
+  ],
+  variable: "--font-domaine",
   display: "swap",
 });
 
 export const metadata: Metadata = {
-  title: "Nason Wedding",
-  description: "Two names, one weekend, your company requested",
-  keywords: ["wedding", "celebration", "nason"],
-  authors: [{ name: "Nason Wedding" }],
+  title: "Olivia & Mac Wedding",
+  description: "Join us on our special day - March 29th, 2026",
+  keywords: ["wedding", "celebration", "olivia", "mac"],
+  authors: [{ name: "Olivia & Mac" }],
   openGraph: {
-    title: "Nason Wedding",
-    description: "Two names, one weekend, your company requested",
+    title: "Olivia & Mac Wedding",
+    description: "Join us on our special day - March 29th, 2026",
     type: "website",
   },
 };
@@ -33,8 +76,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${playfair.variable} ${crimson.variable}`}>
-      <body className="bg-cream text-midnight antialiased">{children}</body>
+    <html
+      lang="en"
+      className={`${ppEditorial.variable} ${domaineText.variable}`}
+    >
+      <body className="bg-bg-base text-fg-primary antialiased font-domaine">
+        {children}
+      </body>
     </html>
   );
 }

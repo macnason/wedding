@@ -1,81 +1,15 @@
 "use client";
 
-/* eslint-disable react/no-unescaped-entities */
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { motion } from "framer-motion";
+import FadeInView from "../components/animations/FadeInView";
+import HoverScale from "../components/animations/HoverScale";
+import StaggerContainer, {
+  itemVariants,
+} from "../components/animations/StaggerContainer";
 
 export default function HomePage() {
-  const [activeSection, setActiveSection] = useState("");
   const [isRSVPModalOpen, setIsRSVPModalOpen] = useState(false);
-  const [formData, setFormData] = useState({
-    fullName: "",
-    email: "",
-    phone: "",
-    attending: "",
-    guestCount: "1",
-    plusOneName: "",
-    events: {
-      welcomeDrinks: false,
-      ceremony: false,
-      reception: false,
-      farewellBrunch: false,
-    },
-    dietaryNotes: "",
-    songRequest: "",
-    message: "",
-    photoConsent: true,
-  });
-  const [isSubmitted, setIsSubmitted] = useState(false);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      const sections = ["hero", "story", "details", "photos"];
-      const scrollPosition = window.scrollY + 100;
-
-      for (const section of sections) {
-        const element = document.getElementById(section);
-        if (element) {
-          const { offsetTop, offsetHeight } = element;
-          if (
-            scrollPosition >= offsetTop &&
-            scrollPosition < offsetTop + offsetHeight
-          ) {
-            setActiveSection(section);
-            break;
-          }
-        }
-      }
-    };
-
-    const handleKeyDown = (e: KeyboardEvent) => {
-      // Escape key closes modal
-      if (e.key === "Escape" && isRSVPModalOpen) {
-        setIsRSVPModalOpen(false);
-      }
-
-      // Arrow keys for section navigation (when modal is closed)
-      if (!isRSVPModalOpen) {
-        const sections = ["hero", "story", "details", "photos"];
-        const currentIndex = sections.indexOf(activeSection);
-
-        if (e.key === "ArrowDown" && currentIndex < sections.length - 1) {
-          e.preventDefault();
-          scrollToSection(sections[currentIndex + 1]);
-        } else if (e.key === "ArrowUp" && currentIndex > 0) {
-          e.preventDefault();
-          scrollToSection(sections[currentIndex - 1]);
-        }
-      }
-    };
-
-    window.addEventListener("scroll", handleScroll);
-    window.addEventListener("keydown", handleKeyDown);
-    handleScroll(); // Call once to set initial state
-
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-      window.removeEventListener("keydown", handleKeyDown);
-    };
-  }, [activeSection, isRSVPModalOpen]);
 
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId);
@@ -84,587 +18,310 @@ export default function HomePage() {
     }
   };
 
-  const handleInputChange = (
-    e: React.ChangeEvent<
-      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
-    >,
-  ) => {
-    const { name, value, type } = e.target;
-
-    if (type === "checkbox") {
-      const checked = (e.target as HTMLInputElement).checked;
-      if (name.startsWith("events.")) {
-        const eventName = name.split(".")[1];
-        setFormData((prev) => ({
-          ...prev,
-          events: {
-            ...prev.events,
-            [eventName]: checked,
-          },
-        }));
-      } else {
-        setFormData((prev) => ({
-          ...prev,
-          [name]: checked,
-        }));
-      }
-    } else {
-      setFormData((prev) => ({
-        ...prev,
-        [name]: value,
-      }));
-    }
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    console.log("RSVP Data:", formData);
-    setIsSubmitted(true);
-    setTimeout(() => {
-      setIsRSVPModalOpen(false);
-      setIsSubmitted(false);
-    }, 3000);
-  };
-
-  const handleModalKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === "Escape") {
-      setIsRSVPModalOpen(false);
-    }
-  };
-
-  const handleBackdropClick = (e: React.MouseEvent) => {
-    if (e.target === e.currentTarget) {
-      setIsRSVPModalOpen(false);
-    }
-  };
-
-  // Focus management for modal
-  useEffect(() => {
-    if (isRSVPModalOpen) {
-      // Focus the modal when it opens
-      const modal = document.querySelector('[role="dialog"]') as HTMLElement;
-      if (modal) {
-        modal.focus();
-      }
-
-      // Prevent body scroll when modal is open
-      document.body.style.overflow = "hidden";
-    } else {
-      // Restore body scroll when modal closes
-      document.body.style.overflow = "unset";
-    }
-
-    return () => {
-      document.body.style.overflow = "unset";
-    };
-  }, [isRSVPModalOpen]);
-
   return (
     <div className="relative">
-      {/* Fixed Navigation */}
-      <nav
-        className="fixed top-8 left-1/2 transform -translate-x-1/2 z-50 bg-white/80 backdrop-blur-md border border-wine/20 rounded-full px-8 py-3"
-        role="navigation"
-        aria-label="Main navigation"
-      >
-        <div className="flex items-center space-x-8">
-          <button
-            onClick={() => scrollToSection("hero")}
-            className={`text-sm tracking-wider transition-colors focus:outline-none focus:ring-2 focus:ring-wine/50 rounded px-2 py-1 ${activeSection === "hero" ? "text-wine" : "text-midnight/60 hover:text-wine"}`}
-          >
-            Home
-          </button>
-          <button
-            onClick={() => scrollToSection("story")}
-            className={`text-sm tracking-wider transition-colors focus:outline-none focus:ring-2 focus:ring-wine/50 rounded px-2 py-1 ${activeSection === "story" ? "text-wine" : "text-midnight/60 hover:text-wine"}`}
-          >
-            Story
-          </button>
-          <button
-            onClick={() => scrollToSection("details")}
-            className={`text-sm tracking-wider transition-colors focus:outline-none focus:ring-2 focus:ring-wine/50 rounded px-2 py-1 ${activeSection === "details" ? "text-wine" : "text-midnight/60 hover:text-wine"}`}
-          >
-            Details
-          </button>
-          <button
-            onClick={() => scrollToSection("photos")}
-            className={`text-sm tracking-wider transition-colors focus:outline-none focus:ring-2 focus:ring-wine/50 rounded px-2 py-1 ${activeSection === "photos" ? "text-wine" : "text-midnight/60 hover:text-wine"}`}
-          >
-            Photos
-          </button>
-          <button
-            onClick={() => setIsRSVPModalOpen(true)}
-            className="bg-wine text-cream px-6 py-2 text-sm tracking-wider hover:bg-wine-hover transition-colors rounded-full focus:outline-none focus:ring-2 focus:ring-cream/50"
-          >
-            RSVP
-          </button>
-        </div>
-      </nav>
-
       {/* Hero Section */}
-      <section
-        id="hero"
-        className="min-h-screen flex items-center justify-center px-6 relative overflow-hidden"
-      >
-        <div className="absolute inset-0 bg-gradient-to-b from-cream via-cream/90 to-white"></div>
-        <div className="relative z-10 max-w-6xl mx-auto text-center">
-          <div className="mb-16">
-            <h1 className="editorial-hero text-midnight mb-8 text-balance">
-              Two Names
-            </h1>
-            <h2 className="editorial-headline text-wine mb-12 text-balance">
-              One Weekend
-            </h2>
-            <p className="editorial-quote text-midnight/70 max-w-3xl mx-auto text-balance">
-              Your company requested
-            </p>
+      <section id="hero" className="min-h-screen relative overflow-hidden">
+        {/* Background layers matching Figma exactly */}
+        <div className="absolute inset-0 pointer-events-none">
+          {/* Solid background color */}
+          <div className="absolute bg-[#4a1923] inset-0" />
+
+          {/* Background image at 10% opacity - using hero.png */}
+          <div className="absolute inset-0 opacity-10 overflow-hidden">
+            <div
+              className="absolute inset-0 w-full h-full"
+              style={{
+                backgroundImage: "url('/images/hero.png')",
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+                backgroundRepeat: "no-repeat",
+              }}
+            />
           </div>
 
-          <div className="space-y-6">
-            <p className="font-sans text-lg md:text-xl text-midnight/80 max-w-2xl mx-auto leading-relaxed">
-              Join us for a celebration of love, laughter, and the beginning of
-              our next chapter together.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mt-12">
+          {/* Gradient overlay matching Figma */}
+          <div className="absolute bg-gradient-to-t from-[rgba(108,104,84,0)] from-[40.174%] to-[rgba(74,25,35,0.5)] to-[84.201%] inset-0" />
+        </div>
+
+        {/* Navigation - centered at top as in Figma */}
+        <nav className="absolute z-50 top-6 left-1/2 transform -translate-x-1/2">
+          <div className="flex items-center gap-12 bg-transparent rounded-full px-8 py-0">
+            <HoverScale>
+              <button
+                onClick={() => scrollToSection("celebration")}
+                className="text-fg-inverted text-[16px] font-domaine font-medium tracking-[0.32px] leading-none hover:opacity-80 transition-opacity"
+              >
+                Details
+              </button>
+            </HoverScale>
+            <HoverScale>
+              <button
+                onClick={() => scrollToSection("moments")}
+                className="text-fg-inverted text-[16px] font-domaine font-medium tracking-[0.32px] leading-none hover:opacity-80 transition-opacity"
+              >
+                Moments
+              </button>
+            </HoverScale>
+            <HoverScale>
+              <button
+                onClick={() => scrollToSection("moments")}
+                className="text-fg-inverted text-[16px] font-domaine font-medium tracking-[0.32px] leading-none hover:opacity-80 transition-opacity"
+              >
+                Jukebox
+              </button>
+            </HoverScale>
+            <HoverScale>
               <button
                 onClick={() => setIsRSVPModalOpen(true)}
-                className="btn-primary"
+                className="bg-fg-inverted text-fg-accent px-5 py-4 text-[16px] font-domaine font-medium tracking-[0.32px] leading-none rounded-lg hover:bg-opacity-90 transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-fg-inverted/20"
               >
-                Reserve Your Place
+                RSVP
               </button>
+            </HoverScale>
+          </div>
+        </nav>
+
+        {/* Hero Content - centered layout matching Figma */}
+        <div className="absolute inset-0 flex items-center justify-center z-10">
+          <div className="text-center">
+            {/* Names - centered as single line */}
+            <FadeInView delay={0.2}>
+              <h1 className="text-fg-inverted text-[245.592px] font-editorial font-thin italic leading-none mb-4">
+                Olivia & Mac
+              </h1>
+            </FadeInView>
+
+            {/* Date - centered below names */}
+            <FadeInView delay={0.6}>
+              <p className="text-fg-inverted text-[52px] font-domaine font-normal leading-[1.1]">
+                29.03.2026
+              </p>
+            </FadeInView>
+          </div>
+        </div>
+      </section>
+
+      {/* The Celebration Section */}
+      <section
+        id="celebration"
+        className="py-[200px] px-0 bg-[#f2efe3] flex flex-col items-center justify-center"
+      >
+        <div className="max-w-full w-full flex flex-col items-center gap-[120px]">
+          <FadeInView>
+            <div className="text-center flex flex-col gap-[20px] items-center">
+              <h2 className="font-editorial text-[96px] font-normal italic leading-[1.1] text-[#6c6854]">
+                The Celebration
+              </h2>
+              <p className="font-domaine text-[36px] font-normal leading-[1.3] text-[#4b4945]">
+                Saturday, June 15th, 2024
+              </p>
+              <div className="w-[96px] h-px bg-[#6c6854]"></div>
+            </div>
+          </FadeInView>
+
+          {/* Event Schedule */}
+          <FadeInView delay={0.2}>
+            <div className="bg-[#fbf9ee] rounded-[20px] border border-dashed border-[#6c6854] p-0 max-w-[720px] relative">
+              <StaggerContainer>
+                {[
+                  {
+                    time: "1 pm",
+                    title: "Ceremony",
+                    location: "THE trust · Flinders lane",
+                    description: "Garden ceremony with string quartet",
+                  },
+                  {
+                    time: "2 pm",
+                    title: "Ceremony",
+                    location: "THE trust · Flinders lane",
+                    description: "Garden ceremony with string quartet",
+                  },
+                  {
+                    time: "3 pm",
+                    title: "Ceremony",
+                    location: "THE trust · Flinders lane",
+                    description: "Garden ceremony with string quartet",
+                  },
+                  {
+                    time: "4 pm",
+                    title: "Ceremony",
+                    location: "THE trust · Flinders lane",
+                    description: "Garden ceremony with string quartet",
+                  },
+                ].map((event, index) => (
+                  <motion.div
+                    key={index}
+                    variants={itemVariants}
+                    className="flex gap-[40px] items-start px-[56px] py-[40px] pb-[48px] border-b border-dashed border-[#6c6854] last:border-b-0"
+                  >
+                    <div className="w-[104px] flex-shrink-0">
+                      <p className="font-editorial text-[36px] font-normal italic leading-[1.3] text-[#6c6854]">
+                        {event.time}
+                      </p>
+                    </div>
+                    <div className="flex-1">
+                      <div className="mb-[20px] flex flex-col gap-[4px]">
+                        <p className="font-domaine text-[36px] font-normal leading-[1.3] text-[#6c6854]">
+                          {event.title}
+                        </p>
+                        <p className="font-grotesk text-[14px] font-normal uppercase tracking-[1.96px] leading-[1.3] text-[#4b4945]">
+                          {event.location}
+                        </p>
+                      </div>
+                      <p className="font-domaine text-[20px] font-normal leading-[1.3] text-[#222222]">
+                        {event.description}
+                      </p>
+                    </div>
+                  </motion.div>
+                ))}
+              </StaggerContainer>
+            </div>
+          </FadeInView>
+
+          {/* Maps Button */}
+          <FadeInView delay={0.4}>
+            <HoverScale>
+              <button className="bg-[#fbf9ee] flex items-center gap-[8px] justify-center px-[32px] py-[24px] rounded-[16px] hover:bg-opacity-90 transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-[#4b4945]/20">
+                <span className="text-[26px] text-[#4b4945] tracking-[0.52px]">
+                  📍
+                </span>
+                <span className="font-domaine text-[32px] font-medium tracking-[0.64px] text-[#222222] text-shadow-sm">
+                  Maps
+                </span>
+              </button>
+            </HoverScale>
+          </FadeInView>
+        </div>
+      </section>
+
+      {/* Moments Section */}
+      <section
+        id="moments"
+        className="py-40 px-0 bg-bg-tint relative border-t border-fg-accent"
+      >
+        <div className="max-w-full w-full flex flex-col items-center gap-32">
+          {/* Tilted Photos */}
+          <FadeInView>
+            <div className="relative h-[600px] w-[800px] mb-20">
+              <motion.div
+                className="absolute w-[640px] h-[480px] bg-gray-200 rounded-lg shadow-lg"
+                style={{
+                  transform: "rotate(-7.5deg)",
+                  top: "20px",
+                  left: "10px",
+                  background: "linear-gradient(45deg, #e5e5e5, #f5f5f5)",
+                }}
+                whileHover={{ scale: 1.02, rotate: -6 }}
+                transition={{ duration: 0.3 }}
+              >
+                <div className="w-full h-full bg-gradient-to-br from-gray-300 to-gray-400 rounded-lg border-8 border-bg-base shadow-xl" />
+              </motion.div>
+              <motion.div
+                className="absolute w-[696px] h-[480px] bg-gray-300 rounded-lg shadow-lg"
+                style={{
+                  transform: "rotate(10.7deg)",
+                  top: "0px",
+                  left: "0px",
+                  background: "linear-gradient(45deg, #d5d5d5, #e5e5e5)",
+                }}
+                whileHover={{ scale: 1.02, rotate: 12 }}
+                transition={{ duration: 0.3 }}
+              >
+                <div className="w-full h-full bg-gradient-to-br from-gray-400 to-gray-500 rounded-lg border-8 border-bg-base shadow-xl" />
+              </motion.div>
+            </div>
+          </FadeInView>
+
+          <FadeInView delay={0.2}>
+            <div className="text-center mb-20">
+              <h2 className="section-heading mb-12">Moments</h2>
+              <p className="section-subtitle">Share your highlights with us</p>
+            </div>
+          </FadeInView>
+
+          <FadeInView delay={0.4}>
+            <HoverScale>
+              <button className="btn-accent">Upload</button>
+            </HoverScale>
+          </FadeInView>
+        </div>
+      </section>
+
+      {/* RSVP Section */}
+      <section
+        id="rsvp"
+        className="py-80 px-0 bg-bg-feature relative overflow-hidden"
+        style={{ borderTopLeftRadius: "200px" }}
+      >
+        {/* Background illustration */}
+        <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 translate-y-1/3 w-[820px] h-[1050px] opacity-30">
+          <div className="w-full h-full bg-gradient-to-t from-fg-inverted/10 to-transparent rounded-full" />
+        </div>
+
+        <div className="relative z-10 max-w-full w-full flex flex-col items-center gap-80">
+          <FadeInView>
+            <div className="text-center">
+              <h2 className="section-heading text-fg-inverted mb-14">RSVP</h2>
+              <p className="cta-heading max-w-[555px]">
+                Join us on our special day
+              </p>
+            </div>
+          </FadeInView>
+
+          <FadeInView delay={0.2}>
+            <HoverScale>
               <button
-                onClick={() => scrollToSection("details")}
+                onClick={() => setIsRSVPModalOpen(true)}
                 className="btn-secondary"
               >
-                Event Details
+                RSVP
               </button>
-            </div>
-          </div>
-        </div>
-
-        {/* Scroll indicator */}
-        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
-          <div className="w-6 h-10 border-2 border-wine/50 rounded-full flex justify-center">
-            <div className="w-1 h-3 bg-wine/50 rounded-full mt-2 animate-pulse"></div>
-          </div>
+            </HoverScale>
+          </FadeInView>
         </div>
       </section>
 
-      {/* Story Section */}
-      <section id="story" className="min-h-screen py-24 px-6 bg-white relative">
-        <div className="max-w-4xl mx-auto">
-          <div className="text-center mb-20">
-            <h2 className="font-serif text-5xl md:text-6xl lg:text-7xl font-light text-midnight mb-8 leading-tight">
-              Our Story
-            </h2>
-            <div className="w-24 h-px bg-wine mx-auto mb-8"></div>
-            <p className="font-serif text-xl md:text-2xl text-midnight/70 italic">
-              Every love story is beautiful, but ours is our favorite
-            </p>
-          </div>
-
-          <div className="grid lg:grid-cols-2 gap-16 items-center mb-20">
-            <div>
-              <h3 className="font-serif text-3xl md:text-4xl font-light text-wine mb-6">
-                How We Met
-              </h3>
-              <p className="font-sans text-lg text-midnight/80 leading-relaxed mb-6">
-                It was a crisp autumn evening when our paths first crossed.
-                Neither of us could have imagined that a chance encounter at a
-                coffee shop would change everything.
-              </p>
-              <p className="font-sans text-lg text-midnight/80 leading-relaxed">
-                What started as a simple conversation about books turned into
-                hours of deep discussion about dreams, travel, and life.{" "}
-                <em className="font-serif text-wine">
-                  It was the beginning of everything.
-                </em>
-              </p>
-            </div>
-            <div className="bg-sage/10 p-8 rounded-lg">
-              <blockquote className="font-serif text-2xl md:text-3xl font-light text-midnight/80 italic leading-relaxed">
-                "There was something magnetic about that first conversation—the
-                way time seemed to stop."
-              </blockquote>
-            </div>
-          </div>
-
-          <div className="grid lg:grid-cols-2 gap-16 items-center mb-20">
-            <div className="lg:order-2">
-              <h3 className="font-serif text-3xl md:text-4xl font-light text-wine mb-6">
-                The Proposal
-              </h3>
-              <p className="font-sans text-lg text-midnight/80 leading-relaxed mb-6">
-                It happened on a quiet beach at sunset, just the two of us and
-                the sound of waves. No grand gestures or elaborate plans—just a
-                heartfelt moment where everything felt perfectly right.
-              </p>
-              <p className="font-sans text-lg text-midnight/80 leading-relaxed">
-                When the question was finally asked, the answer came without
-                hesitation:
-                <em className="font-serif text-wine">"Yes, absolutely yes."</em>
-              </p>
-            </div>
-            <div className="lg:order-1 bg-wine/5 p-8 rounded-lg">
-              <blockquote className="font-serif text-2xl md:text-3xl font-light text-midnight/80 italic leading-relaxed">
-                "That evening, as we watched the sun disappear into the horizon,
-                we knew we were ready to write the next chapter together."
-              </blockquote>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Details Section */}
-      <section
-        id="details"
-        className="min-h-screen py-24 px-6 bg-cream/30 relative"
-      >
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-20">
-            <h2 className="font-serif text-5xl md:text-6xl lg:text-7xl font-light text-midnight mb-8 leading-tight">
-              The Celebration
-            </h2>
-            <div className="w-24 h-px bg-wine mx-auto mb-8"></div>
-            <p className="font-serif text-xl md:text-2xl text-midnight/70 italic max-w-3xl mx-auto">
-              Saturday, June 15th, 2024 • The Garden Estate
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-8 mb-16">
-            <div className="text-center bg-white/70 p-8 rounded-lg">
-              <h3 className="font-serif text-2xl font-light text-wine mb-4">
-                Ceremony
-              </h3>
-              <p className="font-sans text-lg text-midnight/80 mb-2">4:00 PM</p>
-              <p className="font-sans text-midnight/60">
-                Garden ceremony with string quartet
-              </p>
-            </div>
-            <div className="text-center bg-white/70 p-8 rounded-lg">
-              <h3 className="font-serif text-2xl font-light text-wine mb-4">
-                Cocktails
-              </h3>
-              <p className="font-sans text-lg text-midnight/80 mb-2">4:30 PM</p>
-              <p className="font-sans text-midnight/60">
-                Passed hors d'oeuvres and signature drinks
-              </p>
-            </div>
-            <div className="text-center bg-white/70 p-8 rounded-lg">
-              <h3 className="font-serif text-2xl font-light text-wine mb-4">
-                Reception
-              </h3>
-              <p className="font-sans text-lg text-midnight/80 mb-2">6:00 PM</p>
-              <p className="font-sans text-midnight/60">
-                Dinner and dancing under the stars
-              </p>
-            </div>
-          </div>
-
-          <div className="grid lg:grid-cols-2 gap-16">
-            <div>
-              <h3 className="font-serif text-3xl font-light text-wine mb-6">
-                Dress Code
-              </h3>
-              <p className="font-sans text-lg text-midnight/80 leading-relaxed mb-4">
-                Semi-formal garden party attire. Think elegant yet comfortable
-                for our outdoor celebration.
-              </p>
-              <ul className="font-sans text-midnight/70 space-y-2">
-                <li>
-                  <strong>For her:</strong> Midi dresses, elegant separates
-                </li>
-                <li>
-                  <strong>For him:</strong> Dress shirt and pants, blazer
-                  optional
-                </li>
-                <li>
-                  <strong>Colors:</strong> Any colors welcome (avoid
-                  white/ivory)
-                </li>
-              </ul>
-            </div>
-            <div>
-              <h3 className="font-serif text-3xl font-light text-wine mb-6">
-                Location
-              </h3>
-              <p className="font-sans text-lg text-midnight/80 leading-relaxed mb-4">
-                The Garden Estate offers a breathtaking backdrop for our
-                celebration, with manicured gardens and twinkling lights
-                creating the perfect romantic atmosphere.
-              </p>
-              <p className="font-sans text-midnight/70 mb-4">
-                123 Celebration Lane
-                <br />
-                Beautiful City, State 12345
-              </p>
-              <button className="text-wine hover:text-wine-hover font-sans font-medium transition-colors">
-                Get Directions →
-              </button>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Photos Section */}
-      <section
-        id="photos"
-        className="min-h-screen py-24 px-6 bg-white relative"
-      >
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-20">
-            <h2 className="font-serif text-5xl md:text-6xl lg:text-7xl font-light text-midnight mb-8 leading-tight">
-              Moments
-            </h2>
-            <div className="w-24 h-px bg-wine mx-auto mb-8"></div>
-            <p className="font-serif text-xl md:text-2xl text-midnight/70 italic">
-              Capturing the beauty of our journey together
-            </p>
-          </div>
-
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-12">
-            {Array.from({ length: 8 }, (_, i) => (
-              <div
-                key={i}
-                className="aspect-square bg-gradient-to-br from-sage/20 to-dusty-rose/20 rounded-lg overflow-hidden hover:scale-105 transition-transform duration-300 cursor-pointer"
-              >
-                <div className="w-full h-full bg-wine/5 flex items-center justify-center">
-                  <span className="font-serif text-wine/40 text-sm">
-                    Photo {i + 1}
-                  </span>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          <div className="text-center bg-sage/10 p-12 rounded-lg">
-            <h3 className="font-serif text-2xl font-light text-wine mb-4">
-              Share Your Memories
-            </h3>
-            <p className="font-sans text-lg text-midnight/80 mb-8 max-w-2xl mx-auto">
-              Help us capture every moment! Upload your photos from our
-              celebration to create a complete collection of memories.
-            </p>
-            <button className="bg-wine text-cream px-8 py-3 text-sm uppercase tracking-wider hover:bg-wine-hover transition-colors">
-              Upload Photos
-            </button>
-          </div>
-        </div>
-      </section>
-
-      {/* Final Section */}
-      <section className="py-32 px-6 bg-midnight text-cream relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-midnight via-midnight/95 to-wine/20"></div>
-        <div className="relative z-10 max-w-4xl mx-auto text-center">
-          <h2 className="editorial-headline text-cream mb-8">Join Us</h2>
-          <div className="editorial-divider bg-cream mb-8"></div>
-          <p className="editorial-quote text-cream/80 mb-16">
-            Your presence is the greatest gift
-          </p>
-
-          <button
-            onClick={() => setIsRSVPModalOpen(true)}
-            className="bg-cream text-midnight px-12 py-4 text-sm uppercase tracking-widest font-medium hover:bg-cream/90 transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-cream/30"
-          >
-            Reserve Your Place
-          </button>
-
-          <div className="mt-20 text-center">
-            <p className="editorial-body text-cream/70 max-w-2xl mx-auto mb-8">
-              "Two hearts, one celebration, surrounded by the people who matter
-              most."
-            </p>
-            <p className="font-sans text-sm text-cream/50">
-              © 2024 Nason Wedding • Made with ♥ for our special day
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* RSVP Modal */}
+      {/* RSVP Modal - keeping existing functionality */}
       {isRSVPModalOpen && (
         <div
           className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4"
-          onClick={handleBackdropClick}
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby="modal-title"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) {
+              setIsRSVPModalOpen(false);
+            }
+          }}
         >
-          <div
-            className="bg-white rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto"
-            onKeyDown={handleModalKeyDown}
-            tabIndex={-1}
-            role="document"
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.9 }}
+            className="bg-bg-base rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto"
           >
             <div className="p-8">
               <div className="flex justify-between items-center mb-6">
-                <h2 id="modal-title" className="editorial-subhead text-wine">
-                  RSVP
-                </h2>
+                <h2 className="section-heading text-fg-accent">RSVP</h2>
                 <button
                   onClick={() => setIsRSVPModalOpen(false)}
-                  className="text-midnight/50 hover:text-midnight text-2xl leading-none p-2 hover:bg-midnight/5 rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-wine/50"
+                  className="text-fg-primary hover:text-fg-accent text-2xl leading-none p-2 hover:bg-fg-primary/5 rounded-full transition-colors"
                 >
                   ×
                 </button>
               </div>
-
-              {isSubmitted ? (
-                <div className="text-center py-8">
-                  <div className="bg-sage/20 p-8 rounded-lg">
-                    <h3 className="text-2xl font-light text-wine mb-4">
-                      Thank You!
-                    </h3>
-                    <p className="editorial-body mb-4">
-                      Your RSVP has been received. We're so excited to celebrate
-                      with you!
-                    </p>
-                    <p className="text-midnight/70">
-                      You should receive a confirmation email shortly.
-                    </p>
-                  </div>
-                </div>
-              ) : (
-                <form onSubmit={handleSubmit} className="space-y-6">
-                  {/* Basic Information */}
-                  <div className="space-y-4">
-                    <h3 className="text-lg font-medium text-wine">
-                      Your Information
-                    </h3>
-                    <div className="grid md:grid-cols-2 gap-4">
-                      <input
-                        type="text"
-                        name="fullName"
-                        placeholder="Full Name"
-                        required
-                        value={formData.fullName}
-                        onChange={handleInputChange}
-                        className="form-input"
-                      />
-                      <input
-                        type="email"
-                        name="email"
-                        placeholder="Email Address"
-                        required
-                        value={formData.email}
-                        onChange={handleInputChange}
-                        className="form-input"
-                      />
-                    </div>
-                  </div>
-
-                  {/* Attendance */}
-                  <div className="space-y-4">
-                    <h3 className="text-lg font-medium text-wine">
-                      Will you be attending?
-                    </h3>
-                    <div className="flex flex-col sm:flex-row gap-4">
-                      <label className="flex items-center space-x-2 cursor-pointer">
-                        <input
-                          type="radio"
-                          name="attending"
-                          value="yes"
-                          checked={formData.attending === "yes"}
-                          onChange={handleInputChange}
-                          className="text-wine focus:ring-wine"
-                        />
-                        <span>Yes, I'll be there! 🎉</span>
-                      </label>
-                      <label className="flex items-center space-x-2 cursor-pointer">
-                        <input
-                          type="radio"
-                          name="attending"
-                          value="no"
-                          checked={formData.attending === "no"}
-                          onChange={handleInputChange}
-                          className="text-wine focus:ring-wine"
-                        />
-                        <span>Sorry, I can't make it</span>
-                      </label>
-                    </div>
-                  </div>
-
-                  {/* Events */}
-                  {formData.attending === "yes" && (
-                    <div className="space-y-4">
-                      <h3 className="text-lg font-medium text-wine">
-                        Which events will you attend?
-                      </h3>
-                      <div className="space-y-3">
-                        {[
-                          {
-                            key: "ceremony",
-                            label: "Wedding Ceremony",
-                            time: "Saturday 4:00 PM",
-                          },
-                          {
-                            key: "reception",
-                            label: "Reception",
-                            time: "Saturday 6:00 PM - 11:00 PM",
-                          },
-                          {
-                            key: "welcomeDrinks",
-                            label: "Welcome Drinks",
-                            time: "Friday 7:00 PM - 9:00 PM",
-                          },
-                          {
-                            key: "farewellBrunch",
-                            label: "Farewell Brunch",
-                            time: "Sunday 10:00 AM - 12:00 PM",
-                          },
-                        ].map((event) => (
-                          <label
-                            key={event.key}
-                            className="flex items-center space-x-3 cursor-pointer"
-                          >
-                            <input
-                              type="checkbox"
-                              name={`events.${event.key}`}
-                              checked={
-                                formData.events[
-                                  event.key as keyof typeof formData.events
-                                ]
-                              }
-                              onChange={handleInputChange}
-                              className="text-wine focus:ring-wine rounded"
-                            />
-                            <span className="flex-1">
-                              <span className="font-medium">{event.label}</span>
-                              <span className="text-midnight/60 ml-2 text-sm">
-                                {event.time}
-                              </span>
-                            </span>
-                          </label>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-
-                  {/* Message */}
-                  <div className="space-y-4">
-                    <h3 className="text-lg font-medium text-wine">
-                      Message for the Couple
-                    </h3>
-                    <textarea
-                      name="message"
-                      rows={4}
-                      placeholder="Share your excitement, well wishes, or any special message..."
-                      value={formData.message}
-                      onChange={handleInputChange}
-                      className="form-input"
-                    />
-                  </div>
-
-                  {/* Submit */}
-                  <div className="pt-4">
-                    <button type="submit" className="w-full btn-primary">
-                      Send RSVP
-                    </button>
-                  </div>
-                </form>
-              )}
+              <p className="section-subtitle text-center mb-8">
+                We can&apos;t wait to celebrate with you!
+              </p>
+              <div className="text-center">
+                <p className="event-description mb-8">
+                  Please fill out our RSVP form to let us know you&apos;ll be
+                  joining us for our special day.
+                </p>
+                <HoverScale>
+                  <button className="btn-primary">Coming Soon</button>
+                </HoverScale>
+              </div>
             </div>
-          </div>
+          </motion.div>
         </div>
       )}
     </div>
